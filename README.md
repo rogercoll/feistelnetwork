@@ -1,6 +1,6 @@
 # feistel
 
-Package feistel provides the basic network to create chipers with provided functions
+See [wiki page](https://en.wikipedia.org/wiki/Feistel_cipher).
 
 
 ---
