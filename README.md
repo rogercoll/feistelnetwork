@@ -1,5 +1,7 @@
 # feistel
 
+Package feistel provides the basic network to create chipers with provided functions
+
 
 ---
 
