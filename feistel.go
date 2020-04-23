@@ -13,6 +13,9 @@ import (
 	"fmt"
 )
 
+// cipher algorithm that takes an string and returns the encoded string
+type cipher func([]rune) []rune
+
 //Xor Bittwise operator between two int32 arrays
 func xor(a,b *[]rune) (*[]rune) {
 	c := make([]rune, len(*a))
@@ -33,7 +36,31 @@ func splitString(a string) (*[]rune, *[]rune, error) {
 	return &l, &r, nil
 }
 
+func joinRune(a *[]rune, b *[]rune) []byte {
+	s := make([]byte, len(*a) + len(*b))
+	for i := 0; i < len(*a); i++ {
+		s[i] = byte((*a)[i])
+	}
+	for i := len(*a); i < len(*a) + len(*b); i++ {
+		s[i] = byte((*b)[i-len(*a)])
+	}
+	return s
+}
+
 // Main function which will allow a string and a crypthographic function as parameters
-func Run() error {
-	return nil
+// n is the number of rounds to run the feisel network 
+func Run(message string, n int, fn cipher) ([]byte, error) {
+	l,r, err := splitString(message)
+	if err != nil {
+		return []byte{},err
+	}
+	fmt.Println(l)
+	for i := 0; i < n; i++ {
+		c := *r
+		e := fn(*r)
+		r = xor(l,&e)
+		l = &c
+	}
+	//last round swaps l and r
+	return joinRune(r,l), nil
 }

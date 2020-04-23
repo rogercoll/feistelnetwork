@@ -2,11 +2,36 @@ package feistel
 
 
 import (
+	"log"
 	"fmt"
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func Example_run() {
+	ceasar := func(text []rune) []rune {
+		//for quick test we set the same shift = 3
+		result := make([]rune, len(text))
+		for i,t := range text {
+			s := int(t) + 3
+			if s > 'z' {
+				s = s - 26
+			} else if s < 'a' {
+				s = s + 26
+			}
+			result[i] = rune(s)
+		}
+		return result
+	}
+	encrypted, err := Run("hell", 1, ceasar)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(encrypted)
+	// Output:
+    // [7 10 108 108]
+}
 
 //Unit tests should contain more examples
 func TestXor(t *testing.T) {
