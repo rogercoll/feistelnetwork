@@ -13,6 +13,7 @@ func Example_run() {
 	ceasar := func(text []rune) []rune {
 		//for quick test we set the same shift = 3
 		result := make([]rune, len(text))
+		_ = make([]rune, 1024)
 		for i,t := range text {
 			s := int(t) + 3
 			if s > 'z' {
@@ -24,13 +25,23 @@ func Example_run() {
 		}
 		return result
 	}
-	encrypted, err := Run("hell", 1, ceasar)
+	p, err := New("hell",1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	encrypted, err := p.Run(ceasar)
+	if err != nil {
+		log.Fatal(err)
+	}
+	message, err := p.Reverse(ceasar)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(encrypted)
+	fmt.Println(message)
 	// Output:
-    // [7 10 108 108]
+	// [7 10 108 108]
+	// hell
 }
 
 //Unit tests should contain more examples
@@ -49,7 +60,6 @@ func TestSplitString(t *testing.T) {
 	test := "test"
 	l, r, err := splitString(test)
 	require.NoError(t, err)
-	fmt.Printf("%v %v\n",l,r)
 	assert.Equal(t, []int32{116,101}, *l)
 	assert.Equal(t, []int32{115,116}, *r)
 }

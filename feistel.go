@@ -11,10 +11,26 @@ package feistel
 
 import (
 	"fmt"
+	"runtime"
 )
+
+type Parts struct {
+	l,r *[]rune
+	rounds int
+}
 
 // cipher algorithm that takes an string and returns the encoded string
 type cipher func([]rune) []rune
+
+func New(message string, r int) (*Parts, error) {
+	PrintMemUsage()
+	left,right, err := splitString(message)
+	if err != nil {
+		return nil, err
+	}
+	n := Parts{rounds: r, l: left, r: right}
+    return &n, nil
+}
 
 //Xor Bittwise operator between two int32 arrays
 func xor(a,b *[]rune) (*[]rune) {
@@ -47,20 +63,43 @@ func joinRune(a *[]rune, b *[]rune) []byte {
 	return s
 }
 
+func toString(a *[]rune, b *[]rune) string {
+	s := ""
+	for i := 0; i < len(*a); i++ {
+		s += string((*a)[i])
+	}
+	for i := len(*a); i < len(*a) + len(*b); i++ {
+		s += string((*b)[i-len(*a)])
+	}
+	return s
+}
+
 // Main function which will allow a string and a crypthographic function as parameters
 // n is the number of rounds to run the feisel network 
-func Run(message string, n int, fn cipher) ([]byte, error) {
-	l,r, err := splitString(message)
-	if err != nil {
-		return []byte{},err
+func (p *Parts)Run(fn cipher) ([]byte, error) {
+	for i := 0; i < p.rounds; i++ {
+		c := *p.r
+		e := fn(*p.r)
+		p.r = xor(p.l,&e)
+		p.l = &c
 	}
-	fmt.Println(l)
-	for i := 0; i < n; i++ {
-		c := *r
-		e := fn(*r)
-		r = xor(l,&e)
-		l = &c
+	//last round swaps l and r ?? yees is okey, decryption is exactly the same proces
+	d := *p.r
+	p.r = p.l
+	p.l = &d
+	return joinRune(p.l,p.r), nil
+}
+
+
+func (p *Parts)Reverse(fn cipher) (string,error) {
+	for i := 0; i < p.rounds; i++ {
+		c := *p.r
+		e := fn(*p.r)
+		p.r = xor(p.l,&e)
+		p.l = &c
 	}
-	//last round swaps l and r
-	return joinRune(r,l), nil
+	d := *p.r
+	p.r = p.l
+	p.l = &d
+	return toString(p.l,p.r),nil
 }
