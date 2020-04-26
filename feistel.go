@@ -15,17 +15,16 @@ import (
 type Parts struct {
 	l,r *[]rune
 	rounds int
+	algor	*func([]rune) []rune
 }
 
-// cipher algorithm that takes an string and returns the encoded string
-type cipher func([]rune) []rune
 
-func New(message string, r int) (*Parts, error) {
+func New(message string, r int, fn *func([]rune) []rune) (*Parts, error) {
 	left,right, err := splitString(message)
 	if err != nil {
 		return nil, err
 	}
-	n := Parts{rounds: r, l: left, r: right}
+	n := Parts{rounds: r, l: left, r: right, algor: fn}
     return &n, nil
 }
 
@@ -73,10 +72,10 @@ func toString(a *[]rune, b *[]rune) string {
 
 // Main function which will allow a string and a crypthographic function as parameters
 // n is the number of rounds to run the feisel network 
-func (p *Parts)Run(fn cipher) ([]byte, error) {
+func (p *Parts)Run() ([]byte, error) {
 	for i := 0; i < p.rounds; i++ {
 		c := *p.r
-		e := fn(*p.r)
+		e := (*p.algor)(*p.r)
 		p.r = xor(p.l,&e)
 		p.l = &c
 	}
@@ -88,10 +87,10 @@ func (p *Parts)Run(fn cipher) ([]byte, error) {
 }
 
 
-func (p *Parts)Reverse(fn cipher) (string,error) {
+func (p *Parts)Reverse() (string,error) {
 	for i := 0; i < p.rounds; i++ {
 		c := *p.r
-		e := fn(*p.r)
+		e := (*p.algor)(*p.r)
 		p.r = xor(p.l,&e)
 		p.l = &c
 	}
