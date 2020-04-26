@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Example_run() {
+func Example_new() {
 	ceasar := func(text []rune) []rune {
 		//for quick test we set the same shift = 3
 		result := make([]rune, len(text))
