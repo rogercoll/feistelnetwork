@@ -11,7 +11,6 @@ package feistel
 
 import (
 	"fmt"
-	"runtime"
 )
 
 type Parts struct {
@@ -23,7 +22,6 @@ type Parts struct {
 type cipher func([]rune) []rune
 
 func New(message string, r int) (*Parts, error) {
-	PrintMemUsage()
 	left,right, err := splitString(message)
 	if err != nil {
 		return nil, err

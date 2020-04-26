@@ -25,7 +25,7 @@ func Example_run() {
 		}
 		return result
 	}
-	p, err := New("hell",1)
+	p, err := New("hell",9)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +40,7 @@ func Example_run() {
 	fmt.Println(encrypted)
 	fmt.Println(message)
 	// Output:
-	// [7 10 108 108]
+	// [102 22 8 55]
 	// hell
 }
 
