@@ -31,14 +31,17 @@ ceasar := func(text []rune) []rune {
     }
     return result
 }
+//message to encrypt, number of rounds, pointer to function
 p, err := New("hell", 9, &ceasar)
 if err != nil {
     log.Fatal(err)
 }
+//encrypt the message
 encrypted, err := p.Run()
 if err != nil {
     log.Fatal(err)
 }
+//decrypt
 message, err := p.Reverse()
 if err != nil {
     log.Fatal(err)
