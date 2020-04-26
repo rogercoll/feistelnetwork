@@ -1,10 +1,12 @@
 # feistel
 
+[![codecov](https://codecov.io/gh/rogercoll/feistelnetwork/branch/master/graph/badge.svg)](https://codecov.io/gh/rogercoll/feistelnetwork)
+
 See [wiki page](https://en.wikipedia.org/wiki/Feistel_cipher).
 
-#### Examples
+## Examples
 
-##### Run
+### Run
 
 ```golang
 ceasar := func(text []rune) []rune {
@@ -43,10 +45,7 @@ fmt.Println(message)
 ```
 [102 22 8 55]
 hell
-
 ```
 
-
 ---
-
-Created by [goreadme](https://github.com/apps/goreadme)
+Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)
