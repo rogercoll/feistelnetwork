@@ -10,6 +10,7 @@ See [wiki page](https://en.wikipedia.org/wiki/Feistel_cipher).
 ceasar := func(text []rune) []rune {
     //for quick test we set the same shift = 3
     result := make([]rune, len(text))
+    _ = make([]rune, 1024)
     for i, t := range text {
         s := int(t) + 3
         if s > 'z' {
@@ -21,17 +22,27 @@ ceasar := func(text []rune) []rune {
     }
     return result
 }
-encrypted, err := Run("hell", 1, ceasar)
+p, err := New("hell", 1)
+if err != nil {
+    log.Fatal(err)
+}
+encrypted, err := p.Run(ceasar)
+if err != nil {
+    log.Fatal(err)
+}
+message, err := p.Reverse(ceasar)
 if err != nil {
     log.Fatal(err)
 }
 fmt.Println(encrypted)
+fmt.Println(message)
 ```
 
  Output:
 
 ```
 [7 10 108 108]
+hell
 
 ```
 
