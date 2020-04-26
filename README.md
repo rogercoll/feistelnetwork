@@ -29,15 +29,15 @@ ceasar := func(text []rune) []rune {
     }
     return result
 }
-p, err := New("hell", 9)
+p, err := New("hell", 9, &ceasar)
 if err != nil {
     log.Fatal(err)
 }
-encrypted, err := p.Run(ceasar)
+encrypted, err := p.Run()
 if err != nil {
     log.Fatal(err)
 }
-message, err := p.Reverse(ceasar)
+message, err := p.Reverse()
 if err != nil {
     log.Fatal(err)
 }
